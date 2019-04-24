@@ -92,6 +92,7 @@ fn show_contacts(params: Params) -> jsonrpc_core::Result<jsonrpc_core::types::Va
     struct ShowContactParams {
         name: String,
         comment: Option<String>,
+        limit: String,
     }
 
     let p: ShowContactParams = params.parse()?;
@@ -100,7 +101,10 @@ fn show_contacts(params: Params) -> jsonrpc_core::Result<jsonrpc_core::types::Va
 
     let result = contact
         .filter(name.ilike(pattern))
-        .limit(5)
+        .limit(match p.limit.parse::<u64>() {
+            Ok(v) => v,
+            Err(_) => 10u64,
+        } as i64)
         .load::<Contact>(&connection)
         .expect("Error!");
 

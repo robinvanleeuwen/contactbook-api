@@ -11,7 +11,7 @@ use diesel::pg::PgConnection;
 use std::env;
 
 pub fn establish_connection() -> Result<PgConnection, ConnectionError> {
-    dotenv::from_filename("/etc/contactbook-api.conf").ok().unwrap_or_default();
+    dotenv::from_filename("/etc/contactbook-api.conf").ok();
 
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
